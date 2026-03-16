@@ -4,12 +4,12 @@ export default class PhysioController {
     this.model          = model;
     this.view           = view;
     this.viewManager    = viewManager;
-    this.onPhysioChange = onPhysioChange; // callback para notificar al selector de eventos
+    this.onPhysioChange = onPhysioChange;
 
-    this.form           = document.querySelector("#physioForm");
-    this.formCard       = document.querySelector("#physioFormCard");
-    this.formTitle      = document.querySelector("#physioFormTitle");
-    this.editingId      = null;
+    this.form      = document.querySelector("#physioForm");
+    this.formCard  = document.querySelector("#physioFormCard");
+    this.formTitle = document.querySelector("#physioFormTitle");
+    this.editingId = null;
 
     this.init();
   }
@@ -21,25 +21,18 @@ export default class PhysioController {
     this._bindHeader();
   }
 
-  /* ── tabla ── */
-
   async _refreshTable() {
     const physios = await this.model.getAll();
     this.view.render(physios);
     if (this.onPhysioChange) this.onPhysioChange(physios);
   }
 
-  /* ── form submit ── */
-
   _bindForm() {
     this.form.addEventListener("submit", async (e) => {
       e.preventDefault();
       if (!this._validate()) return;
 
-      const data = {
-        nombre:  this.form.nombre.value.trim(),
-        deporte: this.form.deporte.value.trim(),
-      };
+      const data = { nombre: this.form.nombre.value.trim() };
 
       if (this.editingId !== null) {
         data.id = this.editingId;
@@ -61,8 +54,6 @@ export default class PhysioController {
       this._clearErrors();
     });
   }
-
-  /* ── acciones en tabla ── */
 
   _bindTableActions() {
     document.querySelector("#physioTableBody").addEventListener("click", async (e) => {
@@ -96,8 +87,6 @@ export default class PhysioController {
     this.formCard.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  /* ── botón agregar ── */
-
   _bindHeader() {
     document.querySelector("#btnAgregarPhysio")?.addEventListener("click", () => {
       this.editingId = null;
@@ -109,22 +98,18 @@ export default class PhysioController {
     });
   }
 
-  /* ── validación ── */
-
   _validate() {
     let valid = true;
-    ["nombre", "deporte"].forEach(name => {
-      const input = this.form[name];
-      const error = input.closest(".form-group")?.querySelector(".field-error");
-      if (!input.value.trim()) {
-        input.classList.add("invalid");
-        error?.classList.add("show");
-        valid = false;
-      } else {
-        input.classList.remove("invalid");
-        error?.classList.remove("show");
-      }
-    });
+    const input = this.form.nombre;
+    const error = input.closest(".form-group")?.querySelector(".field-error");
+    if (!input.value.trim()) {
+      input.classList.add("invalid");
+      error?.classList.add("show");
+      valid = false;
+    } else {
+      input.classList.remove("invalid");
+      error?.classList.remove("show");
+    }
     return valid;
   }
 

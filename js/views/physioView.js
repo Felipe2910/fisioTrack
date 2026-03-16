@@ -1,9 +1,9 @@
 export default class PhysioView {
 
   constructor() {
-    this.tableBody      = document.querySelector("#physioTableBody");
-    this.tableCard      = document.querySelector("#physioTableCard");
-    this.emptyState     = document.querySelector("#physioEmptyState");
+    this.tableBody  = document.querySelector("#physioTableBody");
+    this.tableCard  = document.querySelector("#physioTableCard");
+    this.emptyState = document.querySelector("#physioEmptyState");
   }
 
   /* ── tabla de fisioterapeutas ── */
@@ -29,7 +29,6 @@ export default class PhysioView {
           <span class="physio-avatar">${initials}</span>
           ${this._esc(physio.nombre)}
         </td>
-        <td>${this._esc(physio.deporte || "—")}</td>
         <td>
           <div class="actions-cell">
             <button class="btn-icon edit-physio-btn" data-id="${physio.id}" title="Editar">
@@ -56,11 +55,10 @@ export default class PhysioView {
 
   fillForm(form, physio) {
     form.id.value     = physio.id;
-    form.nombre.value = physio.nombre  || "";
-    form.deporte.value = physio.deporte || "";
+    form.nombre.value = physio.nombre || "";
   }
 
-  /* ── selector de fisioterapeutas en formulario de evento ── */
+  /* ── selector en formulario de evento ── */
 
   renderSelector(physios, seleccionados = []) {
     const list = document.querySelector("#physioCheckList");
@@ -82,7 +80,6 @@ export default class PhysioView {
       item.innerHTML = `
         <input type="checkbox" value="${this._esc(physio.nombre)}" ${checked ? "checked" : ""}>
         <span class="physio-check-name">${this._esc(physio.nombre)}</span>
-        <span class="physio-check-sport">${this._esc(physio.deporte || "")}</span>
       `;
 
       list.appendChild(item);
@@ -91,7 +88,7 @@ export default class PhysioView {
     this._updateTags(seleccionados);
   }
 
-  /* ── actualizar tags de seleccionados ── */
+  /* ── tags de seleccionados ── */
 
   _updateTags(nombres) {
     const container = document.querySelector("#physioSeleccionados");

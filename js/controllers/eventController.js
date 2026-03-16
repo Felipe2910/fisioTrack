@@ -109,8 +109,7 @@ export default class EventController {
     const inlineForm  = document.querySelector("#physioInlineForm");
     const btnGuardar  = document.querySelector("#btnGuardarPhysioInline");
     const btnCancelar = document.querySelector("#btnCancelarPhysioInline");
-    const inputNombre  = document.querySelector("#inline-nombre-physio");
-    const inputDeporte = document.querySelector("#inline-deporte-physio");
+    const inputNombre = document.querySelector("#inline-nombre-physio");
 
     btnAbrir?.addEventListener("click", () => {
       inlineForm.style.display = inlineForm.style.display === "none" ? "block" : "none";
@@ -119,13 +118,11 @@ export default class EventController {
 
     btnCancelar?.addEventListener("click", () => {
       inlineForm.style.display = "none";
-      inputNombre.value  = "";
-      inputDeporte.value = "";
+      inputNombre.value = "";
     });
 
     btnGuardar?.addEventListener("click", async () => {
-      const nombre  = inputNombre.value.trim();
-      const deporte = inputDeporte.value.trim();
+      const nombre = inputNombre.value.trim();
       if (!nombre) { inputNombre.focus(); return; }
 
       // importar el modelo de fisioterapeuta dinámicamente para no crear dependencia circular
@@ -134,7 +131,7 @@ export default class EventController {
       const physioModel = window.__physioModel;
       if (!physioModel) return;
 
-      await physioModel.add({ nombre, deporte });
+      await physioModel.add({ nombre });
       const todos = await physioModel.getAll();
 
       // añadir automáticamente a seleccionados
@@ -145,8 +142,7 @@ export default class EventController {
       this.physioView.renderSelector(todos, this._fisiosSeleccionados);
       this._fisiosDisponibles = todos;
 
-      inputNombre.value  = "";
-      inputDeporte.value = "";
+      inputNombre.value = "";
       inlineForm.style.display = "none";
     });
   }
@@ -243,7 +239,7 @@ export default class EventController {
       const texto   = ReportService.toText(summary);
       const exito   = await this._copiarPortapapeles(texto);
       this._showFeedback("copyFeedback",
-        exito ? "¡Copiado! Pégalo en donde quieras." : "No se pudo copiar. Selecciona el texto manualmente.",
+        exito ? "¡Copiado al portapapeles!." : "No se pudo copiar. Selecciona el texto manualmente.",
         exito ? "success" : "error"
       );
     });

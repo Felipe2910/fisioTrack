@@ -153,15 +153,9 @@
 
         <!-- mini-form inline para fisioterapeuta nuevo -->
         <div id="physioInlineForm" class="physio-inline-form" style="display:none">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="inline-nombre-physio">Nombre</label>
-              <input id="inline-nombre-physio" type="text" placeholder="ej. Kassandra">
-            </div>
-            <div class="form-group">
-              <label for="inline-deporte-physio">Deporte</label>
-              <input id="inline-deporte-physio" type="text" placeholder="ej. Voleibol">
-            </div>
+          <div class="form-group">
+            <label for="inline-nombre-physio">Nombre completo</label>
+            <input id="inline-nombre-physio" type="text" placeholder="ej. Juan Pérez">
           </div>
           <div class="form-actions">
             <button type="button" class="btn-primary btn-sm" id="btnGuardarPhysioInline">Guardar fisioterapeuta</button>
@@ -236,17 +230,10 @@
         <h3 id="physioFormTitle" style="margin-bottom:14px;font-size:1rem;font-weight:600">Nuevo fisioterapeuta</h3>
         <form id="physioForm" class="form" novalidate>
           <input type="hidden" name="id">
-          <div class="form-row">
-            <div class="form-group">
-              <label for="ph-nombre">Nombre completo</label>
-              <input id="ph-nombre" type="text" name="nombre" placeholder="ej. Kassandra López" required>
-              <span class="field-error">Campo requerido</span>
-            </div>
-            <div class="form-group">
-              <label for="ph-deporte">Deporte</label>
-              <input id="ph-deporte" type="text" name="deporte" placeholder="ej. Voleibol" required>
-              <span class="field-error">Campo requerido</span>
-            </div>
+          <div class="form-group">
+            <label for="ph-nombre">Nombre completo</label>
+            <input id="ph-nombre" type="text" name="nombre" placeholder="ej. Juan Pérez" required>
+            <span class="field-error">Campo requerido</span>
           </div>
           <div class="form-actions">
             <button type="submit" class="btn-primary btn-sm">Guardar</button>
@@ -264,7 +251,6 @@
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Deporte</th>
               <th></th>
             </tr>
           </thead>

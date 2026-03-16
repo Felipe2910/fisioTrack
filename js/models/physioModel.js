@@ -16,7 +16,7 @@ export default class PhysioModel {
   }
 
   async update(physio) {
-    return this.db.update(this.store, physio);  // usa el método genérico
+    return this.db.update(this.store, physio);
   }
 
   async delete(id) {

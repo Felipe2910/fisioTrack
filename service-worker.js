@@ -1,4 +1,4 @@
-const CACHE = "fisiotrack-v8";
+const CACHE = "fisiotrack-v9";
 
 const ASSETS = [
   "./",

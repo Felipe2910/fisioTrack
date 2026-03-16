@@ -2,7 +2,7 @@ export default class DBService {
 
   constructor() {
     this.dbName    = "FisioTrackDB";
-    this.dbVersion = 2;          // bump para agregar store physios
+    this.dbVersion = 3;          // limpieza de índices
     this.db        = null;
   }
 
@@ -22,7 +22,6 @@ export default class DBService {
             keyPath: "id", autoIncrement: true
           });
           store.createIndex("fechaInicio", "fechaInicio");
-          store.createIndex("fisioterapeuta",      "fisioterapeuta");
         }
 
         if (!db.objectStoreNames.contains("physios")) {
@@ -59,7 +58,7 @@ export default class DBService {
     return new Promise((resolve, reject) => {
       const tx      = this.db.transaction(storeName, "readwrite");
       const store   = tx.objectStore(storeName);
-      const request = store.put(data);        // put actualiza si el id existe
+      const request = store.put(data);
       request.onsuccess = () => resolve(request.result);
       request.onerror   = () => reject(request.error);
     });
