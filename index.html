@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f1115">
+<link rel="shortcut icon" href="icons/icon-192.png" type="image/x-icon">
+<title>FisioTrack</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <button class="menu-toggle" aria-label="Abrir menú">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="4" y1="12" x2="20" y2="12"></line>
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
+    <h1 class="logo">FisioTrack</h1>
+  </div>
+</header>
+
+<nav class="sidebar">
+  <ul>
+    <li>
+      <button data-view="eventos">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+        </svg>
+        Eventos
+      </button>
+    </li>
+    <li>
+      <button data-view="nuevo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Nuevo evento
+      </button>
+    </li>
+    <li>
+      <button data-view="atletas">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
+        Atletas
+      </button>
+    </li>
+    <li>
+      <button data-view="reportes">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Reportes
+      </button>
+    </li>
+  </ul>
+</nav>
+<div class="overlay"></div>
+
+<main class="main">
+
+  <!-- VISTA: EVENTOS -->
+  <section id="eventos" class="view active">
+    <header class="section-header">
+      <h2>Eventos</h2>
+      <button class="btn-primary" id="btnAgregar">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Agregar
+      </button>
+    </header>
+
+    <div id="emptyState" class="empty-state" style="display:none">
+      <p>No hay eventos registrados.</p>
+      <button class="btn-primary" id="btnAgregarEmpty">Registrar primer evento</button>
+    </div>
+
+    <div class="card table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Atleta</th>
+            <th>Evento</th>
+            <th>Tipo</th>
+            <th>Fechas</th>
+            <th>Días</th>
+            <th>Dom.</th>
+            <th>Lugar</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="eventTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- VISTA: NUEVO / EDITAR EVENTO -->
+  <section id="nuevo" class="view">
+    <h2 id="formTitle">Registrar evento</h2>
+
+    <form id="eventForm" class="form" novalidate>
+      <input type="hidden" name="id">
+
+      <!-- SELECTOR DE ATLETAS -->
+      <div class="form-group" id="grupoAtletas">
+        <label>Atleta(s)</label>
+
+        <div class="athlete-selector">
+          <input
+            id="inp-atleta-filtro"
+            type="text"
+            placeholder="Buscar atleta..."
+            autocomplete="off"
+          >
+          <div id="atletaCheckList" class="athlete-checklist"></div>
+          <div id="atletaSeleccionados" class="athlete-tags"></div>
+          <input type="hidden" name="atleta" id="inp-atleta-hidden">
+        </div>
+
+        <span class="field-error" id="errorAtleta">Selecciona al menos un atleta</span>
+
+        <button type="button" class="btn-link" id="btnNuevoAtletaInline">
+          + Registrar atleta nuevo
+        </button>
+      </div>
+
+      <!-- mini-form inline para atleta nuevo -->
+      <div id="atletaInlineForm" class="athlete-inline-form" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="inline-nombre">Nombre</label>
+            <input id="inline-nombre" type="text" placeholder="ej. Kassandra">
+          </div>
+          <div class="form-group">
+            <label for="inline-deporte">Deporte</label>
+            <input id="inline-deporte" type="text" placeholder="ej. Voleibol">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-primary btn-sm" id="btnGuardarAtletaInline">Guardar atleta</button>
+          <button type="button" class="btn-secondary btn-sm" id="btnCancelarAtletaInline">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-evento">Evento / Competencia</label>
+          <input id="inp-evento" type="text" name="evento" placeholder="ej. Regional de Volley" required>
+          <span class="field-error">Campo requerido</span>
+        </div>
+        <div class="form-group">
+          <label for="inp-tipo">Tipo</label>
+          <select id="inp-tipo" name="tipo">
+            <option value="Deportivo">Deportivo</option>
+            <option value="Entrenamiento">Entrenamiento</option>
+            <option value="Regional/Nacional">Regional / Nacional</option>
+            <option value="Campamento">Campamento</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="inp-inicio">Fecha de inicio</label>
+          <input id="inp-inicio" type="date" name="fechaInicio" required>
+          <span class="field-error">Campo requerido</span>
+        </div>
+        <div class="form-group">
+          <label for="inp-fin">Fecha de fin</label>
+          <input id="inp-fin" type="date" name="fechaFin" required>
+          <span class="field-error">Campo requerido</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="inp-lugar">Lugar / Sede</label>
+        <input id="inp-lugar" type="text" name="lugar" placeholder="ej. Mérida, Yucatán">
+      </div>
+
+      <div class="form-group">
+        <label for="inp-obs">Observaciones</label>
+        <textarea id="inp-obs" name="observaciones" rows="3" placeholder="Incidencias, condición del atleta, notas clínicas..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" id="btnGuardar">Guardar</button>
+        <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- VISTA: ATLETAS -->
+  <section id="atletas" class="view">
+    <header class="section-header">
+      <h2>Atletas</h2>
+      <button class="btn-primary" id="btnAgregarAtleta">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Agregar
+      </button>
+    </header>
+
+    <!-- form atleta -->
+    <div id="atletaFormCard" class="card" style="display:none">
+      <h3 id="atletaFormTitle" style="margin-bottom:14px;font-size:1rem;font-weight:600">Nuevo atleta</h3>
+      <form id="atletaForm" class="form" novalidate>
+        <input type="hidden" name="id">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="at-nombre">Nombre completo</label>
+            <input id="at-nombre" type="text" name="nombre" placeholder="ej. Kassandra López" required>
+            <span class="field-error">Campo requerido</span>
+          </div>
+          <div class="form-group">
+            <label for="at-deporte">Deporte</label>
+            <input id="at-deporte" type="text" name="deporte" placeholder="ej. Voleibol" required>
+            <span class="field-error">Campo requerido</span>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary btn-sm">Guardar</button>
+          <button type="button" class="btn-secondary btn-sm" id="btnCancelarAtleta">Cancelar</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="atletaEmptyState" class="empty-state" style="display:none">
+      <p>No hay atletas registrados.</p>
+    </div>
+
+    <div class="card table-wrap" id="atletaTableCard">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Deporte</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="atletaTableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- VISTA: REPORTES -->
+  <section id="reportes" class="view">
+    <h2>Reportes</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-num" id="statEventos">0</span>
+        <span class="stat-lbl">Eventos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="statDias">0</span>
+        <span class="stat-lbl">Días cubiertos</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="statDomingos">0</span>
+        <span class="stat-lbl">Domingos</span>
+      </div>
+    </div>
+
+    <div class="card" id="reporteAtletas"></div>
+
+    <div class="card">
+      <p class="report-hint">Genera el reporte para enviar a tu jefa:</p>
+      <div class="report-actions">
+
+        <button class="btn-primary" id="btnCopiar">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          Copiar texto
+        </button>
+
+        <button class="btn-secondary" id="btnXlsx">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="11" x2="12" y2="17"></line>
+            <line x1="9" y1="14" x2="15" y2="14"></line>
+          </svg>
+          Descargar .xlsx
+        </button>
+
+        <button class="btn-secondary" id="btnDrive">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 19h20L12 2z"></path>
+            <path d="M2 19h20"></path>
+            <path d="M12 2L7 19"></path>
+          </svg>
+          Guardar en Drive
+        </button>
+
+      </div>
+      <div id="copyFeedback" class="copy-feedback" style="display:none"></div>
+      <div id="driveFeedback" class="copy-feedback" style="display:none"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">FisioTrack • Registro de cobertura fisioterapéutica</footer>
+<!-- SheetJS: genera .xlsx sin conexión -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+
+<!-- Google Identity Services: login OAuth para Drive (solo se usa al pulsar "Guardar en Drive") -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
