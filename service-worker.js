@@ -1,10 +1,11 @@
-const CACHE = "fisiotrack-v6";
+const CACHE = "fisiotrack-v7";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./css/style.css",
   "./js/app.js",
+  "./js/xlsx.full.min.js",
   "./js/models/eventModel.js",
   "./js/models/athleteModel.js",
   "./js/views/eventView.js",
