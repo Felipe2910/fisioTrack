@@ -1,3 +1,52 @@
+/* ── fuentes ── */
+@font-face {
+  font-family: "Play";
+  src: url("../font/Play-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Play";
+  src: url("../font/Play-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Emotion Engine";
+  src: url("../font/Emotion-Engine.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Emotion Engine";
+  src: url("../font/Emotion-Engine-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Emotion Engine";
+  src: url("../font/Emotion-Engine-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Emotion Engine";
+  src: url("../font/Emotion-Engine-Bold-Italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 /* ── reset & base ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,7 +77,7 @@
 html { font-size: 15px; }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: "Play", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--clr-bg);
   color: var(--clr-text);
   min-height: 100vh;
@@ -56,6 +105,7 @@ body {
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: -.3px;
+  font-family: "Play", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: var(--clr-primary);
 }
 .menu-toggle {
@@ -97,6 +147,7 @@ body {
   border: none;
   color: var(--clr-muted);
   font-size: .9rem;
+  font-family: "Emotion Engine Bold", "Play", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   cursor: pointer;
   text-align: left;
   transition: background var(--transition), color var(--transition);
@@ -277,6 +328,7 @@ select option { background: var(--clr-surface2); }
   padding: 9px 18px;
   border-radius: var(--radius-sm);
   font-size: .88rem;
+  font-family: "Emotion Engine Bold", "Play", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-weight: 600;
   cursor: pointer;
   border: none;

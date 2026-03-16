@@ -14,6 +14,14 @@ const ASSETS = [
   "./js/services/dbService.js",
   "./js/services/reportService.js",
   "./manifest.json",
+  "./icons/icon-192.png",
+  "./icons/icon-512.png",
+  "./font/Play-Regular.ttf",
+  "./font/Play-Bold.ttf",
+  "./font/Emotion-Engine.otf",
+  "./font/Emotion-Engine-Bold.otf",
+  "./font/Emotion-Engine-Italic.otf",
+  "./font/Emotion-Engine-Bold-Italic.otf",
 ];
 
 self.addEventListener("install", e => {
