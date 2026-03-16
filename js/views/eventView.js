@@ -28,7 +28,7 @@ export default class EventView {
       const badge  = this._tipoBadge(event.tipo);
 
       row.innerHTML = `
-        <td>${this._esc(event.atleta)}</td>
+        <td>${this._esc(event.fisioterapeuta)}</td>
         <td>${this._esc(event.evento)}</td>
         <td>${badge}</td>
         <td>${fechas}</td>
@@ -63,23 +63,23 @@ export default class EventView {
 
   /* ── reporte ── */
 
-  renderReport({ events, totalDias, totalDomingos, atletaMap }) {
+  renderReport({ events, totalDias, totalDomingos, fisioterapeutaMap }) {
     document.querySelector("#statEventos").textContent  = events.length;
     document.querySelector("#statDias").textContent     = totalDias;
     document.querySelector("#statDomingos").textContent = totalDomingos;
 
-    const container = document.querySelector("#reporteAtletas");
-    if (!Object.keys(atletaMap).length) {
+    const container = document.querySelector("#reporteFisioterapeutas");
+    if (!Object.keys(fisioterapeutaMap).length) {
       container.innerHTML = `<p style="color:var(--clr-muted);font-size:.85rem">Sin datos aún.</p>`;
       return;
     }
 
-    container.innerHTML = Object.entries(atletaMap)
+    container.innerHTML = Object.entries(fisioterapeutaMap)
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([nombre, data]) => `
-        <div class="atleta-row">
-          <span class="atleta-nombre">${this._esc(nombre)}</span>
-          <span class="atleta-meta">
+        <div class="fisioterapeuta-row">
+          <span class="fisioterapeuta-nombre">${this._esc(nombre)}</span>
+          <span class="fisioterapeuta-meta">
             ${data.eventos} evento${data.eventos !== 1 ? "s" : ""} •
             ${data.dias} día${data.dias !== 1 ? "s" : ""} •
             ${data.domingos} dom.
@@ -92,7 +92,7 @@ export default class EventView {
 
   fillForm(form, event) {
     form.id.value           = event.id;
-    form.atleta.value       = event.atleta       || "";
+    form.fisioterapeuta.value       = event.fisioterapeuta       || "";
     form.evento.value       = event.evento       || "";
     form.fechaInicio.value  = event.fechaInicio  || "";
     form.fechaFin.value     = event.fechaFin     || "";

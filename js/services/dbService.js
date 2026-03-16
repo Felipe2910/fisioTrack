@@ -2,7 +2,7 @@ export default class DBService {
 
   constructor() {
     this.dbName    = "FisioTrackDB";
-    this.dbVersion = 2;          // bump para agregar store athletes
+    this.dbVersion = 2;          // bump para agregar store physios
     this.db        = null;
   }
 
@@ -22,11 +22,11 @@ export default class DBService {
             keyPath: "id", autoIncrement: true
           });
           store.createIndex("fechaInicio", "fechaInicio");
-          store.createIndex("atleta",      "atleta");
+          store.createIndex("fisioterapeuta",      "fisioterapeuta");
         }
 
-        if (!db.objectStoreNames.contains("athletes")) {
-          const aStore = db.createObjectStore("athletes", {
+        if (!db.objectStoreNames.contains("physios")) {
+          const aStore = db.createObjectStore("physios", {
             keyPath: "id", autoIncrement: true
           });
           aStore.createIndex("nombre", "nombre");

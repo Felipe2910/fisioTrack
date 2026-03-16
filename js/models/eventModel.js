@@ -67,18 +67,18 @@ export default class EventModel {
     const totalDias     = events.reduce((s, e) => s + (e.diasCubiertos  || 0), 0);
     const totalDomingos = events.reduce((s, e) => s + (e.domingosCubiertos || 0), 0);
 
-    const atletaMap = {};
+    const fisioterapeutaMap = {};
     events.forEach(ev => {
-      const nombres = ev.atleta.split(",").map(n => n.trim()).filter(Boolean);
+      const nombres = ev.fisioterapeuta.split(",").map(n => n.trim()).filter(Boolean);
       nombres.forEach(nombre => {
-        if (!atletaMap[nombre]) atletaMap[nombre] = { eventos: 0, dias: 0, domingos: 0 };
-        atletaMap[nombre].eventos++;
-        atletaMap[nombre].dias     += ev.diasCubiertos      || 0;
-        atletaMap[nombre].domingos += ev.domingosCubiertos  || 0;
+        if (!fisioterapeutaMap[nombre]) fisioterapeutaMap[nombre] = { eventos: 0, dias: 0, domingos: 0 };
+        fisioterapeutaMap[nombre].eventos++;
+        fisioterapeutaMap[nombre].dias     += ev.diasCubiertos      || 0;
+        fisioterapeutaMap[nombre].domingos += ev.domingosCubiertos  || 0;
       });
     });
 
-    return { events, totalDias, totalDomingos, atletaMap };
+    return { events, totalDias, totalDomingos, fisioterapeutaMap };
   }
 
   /* ── interno ── */

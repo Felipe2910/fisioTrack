@@ -2,7 +2,7 @@ export default class ReportService {
 
   /* ── texto plano ── */
 
-  static toText({ events, totalDias, totalDomingos, atletaMap }) {
+  static toText({ events, totalDias, totalDomingos, fisioterapeutaMap }) {
     const hoy = new Date().toLocaleDateString("es-MX", { day:"2-digit", month:"2-digit", year:"numeric" });
     const L   = [];
 
@@ -16,9 +16,9 @@ export default class ReportService {
     L.push(`Domingos cubiertos  : ${totalDomingos}`);
     L.push("");
 
-    if (Object.keys(atletaMap).length) {
-      L.push("RESUMEN POR ATLETA:");
-      Object.entries(atletaMap)
+    if (Object.keys(fisioterapeutaMap).length) {
+      L.push("RESUMEN POR FISIOTERAPEUTA:");
+      Object.entries(fisioterapeutaMap)
         .sort((a, b) => a[0].localeCompare(b[0]))
         .forEach(([nombre, d]) => {
           L.push(`  ${nombre.padEnd(16)} ${d.eventos} evento(s)  ${d.dias} días  ${d.domingos} dom.`);
@@ -31,7 +31,7 @@ export default class ReportService {
     events.forEach((ev, i) => {
       const fechas = ReportService._fmtFechas(ev.fechaInicio, ev.fechaFin);
       L.push(`${i + 1}. ${ev.evento}`);
-      L.push(`   Atleta(s) : ${ev.atleta}`);
+      L.push(`   Fisioterapeuta(s) : ${ev.fisioterapeuta}`);
       L.push(`   Fecha     : ${fechas}`);
       L.push(`   Lugar     : ${ev.lugar || "N/D"}`);
       L.push(`   Tipo      : ${ev.tipo  || "—"}`);
@@ -45,7 +45,7 @@ export default class ReportService {
 
   /* ── .xlsx con SheetJS ── */
 
-  static toXlsx({ events, totalDias, totalDomingos, atletaMap }) {
+  static toXlsx({ events, totalDias, totalDomingos, fisioterapeutaMap }) {
     const XLSX = window.XLSX;
     if (!XLSX) { alert("SheetJS no está cargado todavía. Intenta en un segundo."); return; }
 
@@ -53,13 +53,13 @@ export default class ReportService {
 
     /* ── Hoja 1: Detalle ── */
     const headers = [
-      "Atleta(s)", "Evento", "Tipo",
+      "Fisioterapeuta(s)", "Evento", "Tipo",
       "Fecha inicio", "Fecha fin",
       "Lugar", "Días cubiertos", "Domingos cubiertos", "Observaciones"
     ];
 
     const rows = events.map(ev => [
-      ev.atleta        || "",
+      ev.fisioterapeuta        || "",
       ev.evento        || "",
       ev.tipo          || "",
       ReportService._fmtFechas(ev.fechaInicio, ev.fechaFin).split(" → ")[0] || "",
@@ -90,9 +90,9 @@ export default class ReportService {
     // estilo header (solo disponible en SheetJS Pro, pero la estructura es correcta)
     XLSX.utils.book_append_sheet(wb, wsDetalle, "Detalle");
 
-    /* ── Hoja 2: Resumen por atleta ── */
-    const resHeaders = ["Atleta", "Eventos", "Días cubiertos", "Domingos"];
-    const resRows    = Object.entries(atletaMap)
+    /* ── Hoja 2: Resumen por fisioterapeuta ── */
+    const resHeaders = ["Fisioterapeuta", "Eventos", "Días cubiertos", "Domingos"];
+    const resRows    = Object.entries(fisioterapeutaMap)
       .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([nombre, d]) => [nombre, d.eventos, d.dias, d.domingos]);
 
@@ -107,7 +107,7 @@ export default class ReportService {
 
   /* ── Google Sheets API ── */
 
-  static async toDrive({ events, totalDias, totalDomingos, atletaMap }, onStatus) {
+  static async toDrive({ events, totalDias, totalDomingos, fisioterapeutaMap }, onStatus) {
 
     // ── 1. autenticar ──────────────────────────────────────────────────────
     const CLIENT_ID = "273802988057-qe0ee3ssvdvi0mm4i7l4v4b9bnlvm8rf.apps.googleusercontent.com";   // ← reemplazar tras configurar Google Cloud
@@ -146,7 +146,7 @@ export default class ReportService {
           properties: { title: titulo },
           sheets: [
             { properties: { title: "Detalle",        sheetId: 0 } },
-            { properties: { title: "Resumen atletas", sheetId: 1 } },
+            { properties: { title: "Resumen fisioterapeutas", sheetId: 1 } },
           ]
         })
       });
@@ -161,9 +161,9 @@ export default class ReportService {
     onStatus("loading", "Escribiendo datos...");
 
     const detalle = [
-      ["Atleta(s)","Evento","Tipo","Fecha inicio","Fecha fin","Lugar","Días","Domingos","Observaciones"],
+      ["Fisioterapeuta(s)","Evento","Tipo","Fecha inicio","Fecha fin","Lugar","Días","Domingos","Observaciones"],
       ...events.map(ev => [
-        ev.atleta        || "",
+        ev.fisioterapeuta        || "",
         ev.evento        || "",
         ev.tipo          || "",
         ev.fechaInicio   || "",
@@ -177,8 +177,8 @@ export default class ReportService {
     ];
 
     const resumen = [
-      ["Atleta","Eventos","Días cubiertos","Domingos"],
-      ...Object.entries(atletaMap)
+      ["Fisioterapeuta","Eventos","Días cubiertos","Domingos"],
+      ...Object.entries(fisioterapeutaMap)
         .sort((a,b) => a[0].localeCompare(b[0]))
         .map(([nombre, d]) => [nombre, d.eventos, d.dias, d.domingos]),
     ];
@@ -196,7 +196,7 @@ export default class ReportService {
             valueInputOption: "RAW",
             data: [
               { range: "Detalle!A1",         values: detalle },
-              { range: "Resumen atletas!A1",  values: resumen },
+              { range: "Resumen fisioterapeutas!A1",  values: resumen },
             ]
           })
         }

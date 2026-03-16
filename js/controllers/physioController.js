@@ -1,14 +1,14 @@
-export default class AthleteController {
+export default class PhysioController {
 
-  constructor(model, view, viewManager, onAthleteChange) {
+  constructor(model, view, viewManager, onPhysioChange) {
     this.model          = model;
     this.view           = view;
     this.viewManager    = viewManager;
-    this.onAthleteChange = onAthleteChange; // callback para notificar al selector de eventos
+    this.onPhysioChange = onPhysioChange; // callback para notificar al selector de eventos
 
-    this.form           = document.querySelector("#atletaForm");
-    this.formCard       = document.querySelector("#atletaFormCard");
-    this.formTitle      = document.querySelector("#atletaFormTitle");
+    this.form           = document.querySelector("#physioForm");
+    this.formCard       = document.querySelector("#physioFormCard");
+    this.formTitle      = document.querySelector("#physioFormTitle");
     this.editingId      = null;
 
     this.init();
@@ -24,9 +24,9 @@ export default class AthleteController {
   /* ── tabla ── */
 
   async _refreshTable() {
-    const athletes = await this.model.getAll();
-    this.view.render(athletes);
-    if (this.onAthleteChange) this.onAthleteChange(athletes);
+    const physios = await this.model.getAll();
+    this.view.render(physios);
+    if (this.onPhysioChange) this.onPhysioChange(physios);
   }
 
   /* ── form submit ── */
@@ -54,7 +54,7 @@ export default class AthleteController {
       await this._refreshTable();
     });
 
-    document.querySelector("#btnCancelarAtleta")?.addEventListener("click", () => {
+    document.querySelector("#btnCancelarPhysio")?.addEventListener("click", () => {
       this.form.reset();
       this.editingId = null;
       this.formCard.style.display = "none";
@@ -65,9 +65,9 @@ export default class AthleteController {
   /* ── acciones en tabla ── */
 
   _bindTableActions() {
-    document.querySelector("#atletaTableBody").addEventListener("click", async (e) => {
-      const editBtn   = e.target.closest(".edit-ath-btn");
-      const deleteBtn = e.target.closest(".delete-ath-btn");
+    document.querySelector("#physioTableBody").addEventListener("click", async (e) => {
+      const editBtn   = e.target.closest(".edit-physio-btn");
+      const deleteBtn = e.target.closest(".delete-physio-btn");
 
       if (editBtn) {
         const id = Number(editBtn.dataset.id);
@@ -76,7 +76,7 @@ export default class AthleteController {
 
       if (deleteBtn) {
         const id = Number(deleteBtn.dataset.id);
-        if (confirm("¿Eliminar este atleta?")) {
+        if (confirm("¿Eliminar este fisioterapeuta?")) {
           await this.model.delete(id);
           await this._refreshTable();
         }
@@ -85,12 +85,12 @@ export default class AthleteController {
   }
 
   async _openEdit(id) {
-    const athlete = await this.model.db.getById("athletes", id);
-    if (!athlete) return;
+    const physio = await this.model.db.getById("physios", id);
+    if (!physio) return;
 
     this.editingId = id;
-    this.formTitle.textContent = "Editar atleta";
-    this.view.fillForm(this.form, athlete);
+    this.formTitle.textContent = "Editar fisioterapeuta";
+    this.view.fillForm(this.form, physio);
     this._clearErrors();
     this.formCard.style.display = "block";
     this.formCard.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -99,9 +99,9 @@ export default class AthleteController {
   /* ── botón agregar ── */
 
   _bindHeader() {
-    document.querySelector("#btnAgregarAtleta")?.addEventListener("click", () => {
+    document.querySelector("#btnAgregarPhysio")?.addEventListener("click", () => {
       this.editingId = null;
-      this.formTitle.textContent = "Nuevo atleta";
+      this.formTitle.textContent = "Nuevo fisioterapeuta";
       this.form.reset();
       this._clearErrors();
       this.formCard.style.display = "block";

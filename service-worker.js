@@ -1,28 +1,29 @@
-const CACHE = "fisiotrack-v7";
+const CACHE = "fisiotrack-v8";
 
 const ASSETS = [
   "./",
   "./index.html",
   "./css/style.css",
   "./js/app.js",
-  "./js/xlsx.full.min.js",
   "./js/models/eventModel.js",
-  "./js/models/athleteModel.js",
+  "./js/models/physioModel.js",
   "./js/views/eventView.js",
-  "./js/views/athleteView.js",
+  "./js/views/physioView.js",
   "./js/controllers/eventController.js",
-  "./js/controllers/athleteController.js",
+  "./js/controllers/physioController.js",
   "./js/services/dbService.js",
   "./js/services/reportService.js",
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
-  "./font/Play-Regular.ttf",
-  "./font/Play-Bold.ttf",
-  "./font/Emotion-Engine.otf",
-  "./font/Emotion-Engine-Bold.otf",
-  "./font/Emotion-Engine-Italic.otf",
-  "./font/Emotion-Engine-Bold-Italic.otf",
+  "./font/Play-Regular.woff2",
+  "./font/Play-Regular.woff",
+  "./font/Play-Bold.woff2",
+  "./font/Play-Bold.woff",
+  "./font/Emotion-Engine.woff2",
+  "./font/Emotion-Engine.woff",
+  "./font/Emotion-Engine-Bold.woff2",
+  "./font/Emotion-Engine-Bold.woff",
 ];
 
 self.addEventListener("install", e => {

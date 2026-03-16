@@ -3,19 +3,19 @@ import ReportService from "../services/reportService.js";
 
 export default class EventController {
 
-  constructor(model, view, athleteView, viewManager) {
+  constructor(model, view, physioView, viewManager) {
     this.model       = model;
     this.view        = view;
-    this.athleteView = athleteView;
+    this.physioView = physioView;
     this.viewManager = viewManager;
 
     this.form        = document.querySelector("#eventForm");
     this.formTitle   = document.querySelector("#formTitle");
     this.editingId   = null;
 
-    // estado del selector de atletas
-    this._atletasDisponibles = [];
-    this._atletasSeleccionados = [];
+    // estado del selector de fisioterapeutas
+    this._fisiosDisponibles = [];
+    this._fisiosSeleccionados = [];
 
     this.init();
   }
@@ -23,7 +23,7 @@ export default class EventController {
   async init() {
     await this._refreshTable();
     this._bindSelector();
-    this._bindInlineAthleteForm();
+    this._bindInlinePhysioForm();
     this._bindForm();
     this._bindTableActions();
     this._bindHeader();
@@ -37,29 +37,29 @@ export default class EventController {
     this.view.render(events);
   }
 
-  /* ── llamado desde athleteController cuando cambia la lista ── */
+  /* ── llamado desde physioController cuando cambia la lista ── */
 
-  onAthletesUpdated(athletes) {
-    this._atletasDisponibles = athletes;
-    this.athleteView.renderSelector(athletes, this._atletasSeleccionados);
+  onPhysiosUpdated(physios) {
+    this._fisiosDisponibles = physios;
+    this.physioView.renderSelector(physios, this._fisiosSeleccionados);
   }
 
   /* ── selector: filtro + checkboxes + tags ── */
 
   _bindSelector() {
-    const filtro   = document.querySelector("#inp-atleta-filtro");
-    const lista    = document.querySelector("#atletaCheckList");
-    const tags     = document.querySelector("#atletaSeleccionados");
+    const filtro   = document.querySelector("#inp-physio-filtro");
+    const lista    = document.querySelector("#physioCheckList");
+    const tags     = document.querySelector("#physioSeleccionados");
 
     // filtrar al escribir
     filtro?.addEventListener("input", () => {
       const q = filtro.value.toLowerCase().trim();
-      lista.querySelectorAll(".athlete-check-item").forEach(item => {
+      lista.querySelectorAll(".physio-check-item").forEach(item => {
         const coincide = item.dataset.nombre.includes(q);
         item.classList.toggle("hidden", !coincide);
       });
       // mostrar "sin resultados" si nada coincide
-      const visibles = lista.querySelectorAll(".athlete-check-item:not(.hidden)").length;
+      const visibles = lista.querySelectorAll(".physio-check-item:not(.hidden)").length;
       let noResults = lista.querySelector(".no-results");
       if (!visibles && q) {
         if (!noResults) {
@@ -79,13 +79,13 @@ export default class EventController {
       if (cb.type !== "checkbox") return;
       const nombre = cb.value;
       if (cb.checked) {
-        if (!this._atletasSeleccionados.includes(nombre)) {
-          this._atletasSeleccionados.push(nombre);
+        if (!this._fisiosSeleccionados.includes(nombre)) {
+          this._fisiosSeleccionados.push(nombre);
         }
       } else {
-        this._atletasSeleccionados = this._atletasSeleccionados.filter(n => n !== nombre);
+        this._fisiosSeleccionados = this._fisiosSeleccionados.filter(n => n !== nombre);
       }
-      this.athleteView._updateTags(this._atletasSeleccionados);
+      this.physioView._updateTags(this._fisiosSeleccionados);
     });
 
     // quitar tag con ×
@@ -93,24 +93,24 @@ export default class EventController {
       const btn = e.target.closest("button[data-nombre]");
       if (!btn) return;
       const nombre = btn.dataset.nombre;
-      this._atletasSeleccionados = this._atletasSeleccionados.filter(n => n !== nombre);
+      this._fisiosSeleccionados = this._fisiosSeleccionados.filter(n => n !== nombre);
       // desmarcar checkbox correspondiente
       lista.querySelectorAll("input[type=checkbox]").forEach(cb => {
         if (cb.value === nombre) cb.checked = false;
       });
-      this.athleteView._updateTags(this._atletasSeleccionados);
+      this.physioView._updateTags(this._fisiosSeleccionados);
     });
   }
 
-  /* ── mini-form inline para crear atleta nuevo desde el formulario de evento ── */
+  /* ── mini-form inline para crear fisioterapeuta nuevo desde el formulario de evento ── */
 
-  _bindInlineAthleteForm() {
-    const btnAbrir    = document.querySelector("#btnNuevoAtletaInline");
-    const inlineForm  = document.querySelector("#atletaInlineForm");
-    const btnGuardar  = document.querySelector("#btnGuardarAtletaInline");
-    const btnCancelar = document.querySelector("#btnCancelarAtletaInline");
-    const inputNombre  = document.querySelector("#inline-nombre");
-    const inputDeporte = document.querySelector("#inline-deporte");
+  _bindInlinePhysioForm() {
+    const btnAbrir    = document.querySelector("#btnNuevoPhysioInline");
+    const inlineForm  = document.querySelector("#physioInlineForm");
+    const btnGuardar  = document.querySelector("#btnGuardarPhysioInline");
+    const btnCancelar = document.querySelector("#btnCancelarPhysioInline");
+    const inputNombre  = document.querySelector("#inline-nombre-physio");
+    const inputDeporte = document.querySelector("#inline-deporte-physio");
 
     btnAbrir?.addEventListener("click", () => {
       inlineForm.style.display = inlineForm.style.display === "none" ? "block" : "none";
@@ -128,22 +128,22 @@ export default class EventController {
       const deporte = inputDeporte.value.trim();
       if (!nombre) { inputNombre.focus(); return; }
 
-      // importar el modelo de atleta dinámicamente para no crear dependencia circular
-      const { default: AthleteModel } = await import("../models/athleteModel.js");
+      // importar el modelo de fisioterapeuta dinámicamente para no crear dependencia circular
+      const { default: PhysioModel } = await import("../models/physioModel.js");
       // reutilizar la instancia guardada en window por app.js
-      const athleteModel = window.__athleteModel;
-      if (!athleteModel) return;
+      const physioModel = window.__physioModel;
+      if (!physioModel) return;
 
-      await athleteModel.add({ nombre, deporte });
-      const todos = await athleteModel.getAll();
+      await physioModel.add({ nombre, deporte });
+      const todos = await physioModel.getAll();
 
       // añadir automáticamente a seleccionados
-      if (!this._atletasSeleccionados.includes(nombre)) {
-        this._atletasSeleccionados.push(nombre);
+      if (!this._fisiosSeleccionados.includes(nombre)) {
+        this._fisiosSeleccionados.push(nombre);
       }
 
-      this.athleteView.renderSelector(todos, this._atletasSeleccionados);
-      this._atletasDisponibles = todos;
+      this.physioView.renderSelector(todos, this._fisiosSeleccionados);
+      this._fisiosDisponibles = todos;
 
       inputNombre.value  = "";
       inputDeporte.value = "";
@@ -207,11 +207,11 @@ export default class EventController {
     this.formTitle.textContent = "Editar evento";
 
     // restaurar seleccionados desde el evento guardado
-    this._atletasSeleccionados = event.atleta
-      ? event.atleta.split(",").map(n => n.trim()).filter(Boolean)
+    this._fisiosSeleccionados = event.fisioterapeuta
+      ? event.fisioterapeuta.split(",").map(n => n.trim()).filter(Boolean)
       : [];
 
-    this.athleteView.renderSelector(this._atletasDisponibles, this._atletasSeleccionados);
+    this.physioView.renderSelector(this._fisiosDisponibles, this._fisiosSeleccionados);
     this.view.fillForm(this.form, event);
     this._clearErrors();
     this.viewManager.showView("nuevo");
@@ -243,7 +243,7 @@ export default class EventController {
       const texto   = ReportService.toText(summary);
       const exito   = await this._copiarPortapapeles(texto);
       this._showFeedback("copyFeedback",
-        exito ? "¡Copiado! Pégalo en WhatsApp o correo." : "No se pudo copiar. Selecciona el texto manualmente.",
+        exito ? "¡Copiado! Pégalo en donde quieras." : "No se pudo copiar. Selecciona el texto manualmente.",
         exito ? "success" : "error"
       );
     });
@@ -321,13 +321,13 @@ export default class EventController {
   _validate() {
     let valid = true;
 
-    // atletas: al menos uno seleccionado
-    const errorAtleta = document.querySelector("#errorAtleta");
-    if (!this._atletasSeleccionados.length) {
-      errorAtleta?.classList.add("show");
+    // fisioterapeutas: al menos uno seleccionado
+    const errorPhysio = document.querySelector("#errorPhysio");
+    if (!this._fisiosSeleccionados.length) {
+      errorPhysio?.classList.add("show");
       valid = false;
     } else {
-      errorAtleta?.classList.remove("show");
+      errorPhysio?.classList.remove("show");
     }
 
     // campos de texto requeridos
@@ -363,14 +363,14 @@ export default class EventController {
       el.classList.remove("show");
       el.textContent = "Campo requerido";
     });
-    document.querySelector("#errorAtleta")?.classList.remove("show");
+    document.querySelector("#errorPhysio")?.classList.remove("show");
   }
 
   /* ── helpers ── */
 
   _readForm() {
     return {
-      atleta:        this._atletasSeleccionados.join(", "),
+      fisioterapeuta:        this._fisiosSeleccionados.join(", "),
       evento:        this.form.evento.value.trim(),
       fechaInicio:   this.form.fechaInicio.value,
       fechaFin:      this.form.fechaFin.value,
@@ -383,10 +383,10 @@ export default class EventController {
   _resetForm() {
     this.form.reset();
     this.editingId = null;
-    this._atletasSeleccionados = [];
-    this.athleteView.renderSelector(this._atletasDisponibles, []);
-    document.querySelector("#inp-atleta-filtro").value = "";
-    document.querySelector("#atletaInlineForm").style.display = "none";
+    this._fisiosSeleccionados = [];
+    this.physioView.renderSelector(this._fisiosDisponibles, []);
+    document.querySelector("#inp-physio-filtro").value = "";
+    document.querySelector("#physioInlineForm").style.display = "none";
     this._clearErrors();
   }
 }

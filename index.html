@@ -56,7 +56,7 @@
         </button>
       </li>
       <li>
-        <button data-view="atletas">
+        <button data-view="fisioterapeutas">
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2">
             <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
@@ -64,7 +64,7 @@
             <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
             <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
           </svg>
-          Atletas
+          Fisioterapeutas
         </button>
       </li>
       <li>
@@ -111,7 +111,7 @@
         <table>
           <thead>
             <tr>
-              <th>Atleta</th>
+              <th>Fisioterapeuta</th>
               <th>Evento</th>
               <th>Tipo</th>
               <th>Fechas</th>
@@ -133,39 +133,39 @@
       <form id="eventForm" class="form" novalidate>
         <input type="hidden" name="id">
 
-        <!-- SELECTOR DE ATLETAS -->
-        <div class="form-group" id="grupoAtletas">
-          <label>Atleta(s)</label>
+        <!-- SELECTOR DE FISIOTERAPEUTAS -->
+        <div class="form-group" id="grupoFisioterapeutas">
+          <label>Fisioterapeuta(s)</label>
 
-          <div class="athlete-selector">
-            <input id="inp-atleta-filtro" type="text" placeholder="Buscar atleta..." autocomplete="off">
-            <div id="atletaCheckList" class="athlete-checklist"></div>
-            <div id="atletaSeleccionados" class="athlete-tags"></div>
-            <input type="hidden" name="atleta" id="inp-atleta-hidden">
+          <div class="physio-selector">
+            <input id="inp-physio-filtro" type="text" placeholder="Buscar fisioterapeuta..." autocomplete="off">
+            <div id="physioCheckList" class="physio-checklist"></div>
+            <div id="physioSeleccionados" class="physio-tags"></div>
+            <input type="hidden" name="fisioterapeuta" id="inp-physio-hidden">
           </div>
 
-          <span class="field-error" id="errorAtleta">Selecciona al menos un atleta</span>
+          <span class="field-error" id="errorPhysio">Selecciona al menos un fisioterapeuta</span>
 
-          <button type="button" class="btn-link" id="btnNuevoAtletaInline">
-            + Registrar atleta nuevo
+          <button type="button" class="btn-link" id="btnNuevoPhysioInline">
+            + Registrar fisioterapeuta nuevo
           </button>
         </div>
 
-        <!-- mini-form inline para atleta nuevo -->
-        <div id="atletaInlineForm" class="athlete-inline-form" style="display:none">
+        <!-- mini-form inline para fisioterapeuta nuevo -->
+        <div id="physioInlineForm" class="physio-inline-form" style="display:none">
           <div class="form-row">
             <div class="form-group">
-              <label for="inline-nombre">Nombre</label>
-              <input id="inline-nombre" type="text" placeholder="ej. Kassandra">
+              <label for="inline-nombre-physio">Nombre</label>
+              <input id="inline-nombre-physio" type="text" placeholder="ej. Kassandra">
             </div>
             <div class="form-group">
-              <label for="inline-deporte">Deporte</label>
-              <input id="inline-deporte" type="text" placeholder="ej. Voleibol">
+              <label for="inline-deporte-physio">Deporte</label>
+              <input id="inline-deporte-physio" type="text" placeholder="ej. Voleibol">
             </div>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn-primary btn-sm" id="btnGuardarAtletaInline">Guardar atleta</button>
-            <button type="button" class="btn-secondary btn-sm" id="btnCancelarAtletaInline">Cancelar</button>
+            <button type="button" class="btn-primary btn-sm" id="btnGuardarPhysioInline">Guardar fisioterapeuta</button>
+            <button type="button" class="btn-secondary btn-sm" id="btnCancelarPhysioInline">Cancelar</button>
           </div>
         </div>
 
@@ -207,7 +207,7 @@
         <div class="form-group">
           <label for="inp-obs">Observaciones</label>
           <textarea id="inp-obs" name="observaciones" rows="3"
-            placeholder="Incidencias, condición del atleta, notas clínicas..."></textarea>
+            placeholder="Incidencias, condición del fisioterapeuta, notas clínicas..."></textarea>
         </div>
 
         <div class="form-actions">
@@ -217,11 +217,11 @@
       </form>
     </section>
 
-    <!-- VISTA: ATLETAS -->
-    <section id="atletas" class="view">
+    <!-- VISTA: FISIOTERAPEUTAS -->
+    <section id="fisioterapeutas" class="view">
       <header class="section-header">
-        <h2>Atletas</h2>
-        <button class="btn-primary" id="btnAgregarAtleta">
+        <h2>Fisioterapeutas</h2>
+        <button class="btn-primary" id="btnAgregarPhysio">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -231,35 +231,35 @@
         </button>
       </header>
 
-      <!-- form atleta -->
-      <div id="atletaFormCard" class="card" style="display:none">
-        <h3 id="atletaFormTitle" style="margin-bottom:14px;font-size:1rem;font-weight:600">Nuevo atleta</h3>
-        <form id="atletaForm" class="form" novalidate>
+      <!-- form fisioterapeuta -->
+      <div id="physioFormCard" class="card" style="display:none">
+        <h3 id="physioFormTitle" style="margin-bottom:14px;font-size:1rem;font-weight:600">Nuevo fisioterapeuta</h3>
+        <form id="physioForm" class="form" novalidate>
           <input type="hidden" name="id">
           <div class="form-row">
             <div class="form-group">
-              <label for="at-nombre">Nombre completo</label>
-              <input id="at-nombre" type="text" name="nombre" placeholder="ej. Kassandra López" required>
+              <label for="ph-nombre">Nombre completo</label>
+              <input id="ph-nombre" type="text" name="nombre" placeholder="ej. Kassandra López" required>
               <span class="field-error">Campo requerido</span>
             </div>
             <div class="form-group">
-              <label for="at-deporte">Deporte</label>
-              <input id="at-deporte" type="text" name="deporte" placeholder="ej. Voleibol" required>
+              <label for="ph-deporte">Deporte</label>
+              <input id="ph-deporte" type="text" name="deporte" placeholder="ej. Voleibol" required>
               <span class="field-error">Campo requerido</span>
             </div>
           </div>
           <div class="form-actions">
             <button type="submit" class="btn-primary btn-sm">Guardar</button>
-            <button type="button" class="btn-secondary btn-sm" id="btnCancelarAtleta">Cancelar</button>
+            <button type="button" class="btn-secondary btn-sm" id="btnCancelarPhysio">Cancelar</button>
           </div>
         </form>
       </div>
 
-      <div id="atletaEmptyState" class="empty-state" style="display:none">
-        <p>No hay atletas registrados.</p>
+      <div id="physioEmptyState" class="empty-state" style="display:none">
+        <p>No hay fisioterapeutas registrados.</p>
       </div>
 
-      <div class="card table-wrap" id="atletaTableCard">
+      <div class="card table-wrap" id="physioTableCard">
         <table>
           <thead>
             <tr>
@@ -268,7 +268,7 @@
               <th></th>
             </tr>
           </thead>
-          <tbody id="atletaTableBody"></tbody>
+          <tbody id="physioTableBody"></tbody>
         </table>
       </div>
     </section>
@@ -292,10 +292,10 @@
         </div>
       </div>
 
-      <div class="card" id="reporteAtletas"></div>
+      <div class="card" id="reporteFisioterapeutas"></div>
 
       <div class="card">
-        <p class="report-hint">Genera el reporte y exporta:</p>
+        <p class="report-hint">Genera el reporte para compartir o guardar en la nube:</p>
         <div class="report-actions">
 
           <button class="btn-primary" id="btnCopiar">

@@ -1,10 +1,10 @@
 import DBService           from "./services/dbService.js";
 import EventModel          from "./models/eventModel.js";
-import AthleteModel        from "./models/athleteModel.js";
+import PhysioModel        from "./models/physioModel.js";
 import EventView           from "./views/eventView.js";
-import AthleteView         from "./views/athleteView.js";
+import PhysioView         from "./views/physioView.js";
 import EventController     from "./controllers/eventController.js";
-import AthleteController   from "./controllers/athleteController.js";
+import PhysioController   from "./controllers/physioController.js";
 
 /* ── Sidebar ── */
 class Sidebar {
@@ -52,30 +52,30 @@ async function startApp() {
   await db.init();
 
   const eventModel   = new EventModel(db);
-  const athleteModel = new AthleteModel(db);
+  const physioModel = new PhysioModel(db);
 
-  // exponer athleteModel globalmente para el mini-form inline
-  window.__athleteModel = athleteModel;
+  // exponer physioModel globalmente para el mini-form inline
+  window.__physioModel = physioModel;
 
   const eventView    = new EventView();
-  const athleteView  = new AthleteView();
+  const physioView  = new PhysioView();
   const viewManager  = new ViewManager();
   const sidebar      = new Sidebar();
 
-  // eventController necesita athleteView para renderizar el selector
-  const eventCtrl = new EventController(eventModel, eventView, athleteView, viewManager);
+  // eventController necesita physioView para renderizar el selector
+  const eventCtrl = new EventController(eventModel, eventView, physioView, viewManager);
 
-  // athleteController notifica a eventController cuando cambia la lista
-  new AthleteController(
-    athleteModel,
-    athleteView,
+  // physioController notifica a eventController cuando cambia la lista
+  new PhysioController(
+    physioModel,
+    physioView,
     viewManager,
-    (athletes) => eventCtrl.onAthletesUpdated(athletes)
+    (physios) => eventCtrl.onPhysiosUpdated(physios)
   );
 
-  // cargar atletas iniciales en el selector
-  const athletes = await athleteModel.getAll();
-  eventCtrl.onAthletesUpdated(athletes);
+  // cargar fisioterapeutas iniciales en el selector
+  const physios = await physioModel.getAll();
+  eventCtrl.onPhysiosUpdated(physios);
 
   viewManager.showView("eventos");
   sidebar.close();
